@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "manual_control.h": "c",
+        "operation.h": "c"
+    }
+}
