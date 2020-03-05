@@ -5,7 +5,7 @@ void init_operation_status(operation_status* op){
     op->speed = CM;
     op->curr_position.x = 0;
     op->curr_position.y = 0;
-    op->curr_position.z = 0;
+    op->curr_position.z = 44;
     op->spindle_status = false;
 }
 

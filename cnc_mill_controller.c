@@ -30,15 +30,14 @@ int main( void )
     
       while (!done){
           
-          char ch = get_pressed_key();
+        char ch = get_pressed_key();
          int pinno = decode_pin(ch);
-          
+          prinf("Enter commands (m: manual control / s:execute program): /n");
           if(ch == 'm'){
-              manual_control(io, &op);
-              done=true;
+              manual_control(io, &op)
               printf("Exit manual cotrol...\n");
             }else if(ch=='s'){
-                printf("Control program \n");
+                printf("Initiailize point\n");
                 print_operation_status(&op);
                 trigger_GPIO_pin(io, OK, QUICK_PUSH ,QUICK_REST, &op);
                 
@@ -70,6 +69,8 @@ int main( void )
   return 0;
 }
 
-
+void move_by_direction(volatile struct io_peripherals *io, int direction, float length, operation_status * op){
+  
+}
 
 

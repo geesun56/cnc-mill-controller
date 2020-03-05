@@ -3,13 +3,13 @@
 
 #define CM 10
 #define MM 1
-
-#define MAX_X
-#define MIN_X
-#define MAX_Y
-#define MIN_Y
-#define MAX_Z
-#define MIN_Z
+ 
+#define MAX_X 298
+#define MIN_X 0
+#define MAX_Y 110
+#define MIN_Y 0
+#define MAX_Z 44
+#define MIN_Z 0
 
 #include <stdbool.h>
 #include <stdio.h>
