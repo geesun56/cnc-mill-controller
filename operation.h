@@ -4,12 +4,12 @@
 #define CM 10
 #define MM 1
  
-#define MAX_X 298
-#define MIN_X 0
-#define MAX_Y 110
-#define MIN_Y 0
-#define MAX_Z 44
-#define MIN_Z 0
+#define MAX_X 298.0
+#define MIN_X 0.0
+#define MAX_Y 110.0
+#define MIN_Y 0.0
+#define MAX_Z 44.0
+#define MIN_Z 0.0
 
 #include <stdbool.h>
 #include <stdio.h>

@@ -8,8 +8,8 @@
 #define YMINUS 16
 #define XPLUS 13
 #define XMINUS 24
-#define OK 6
-#define	EXIT 21
+#define OK 6    //ok or spindle
+#define	EXIT 21 //exit or step
 
 
 #define QUICK_PUSH 140000

@@ -14,6 +14,7 @@ void manual_control(volatile struct io_peripherals *io, operation_status* op){
     printf("*      x(Y-)                                        *\n");
     printf("*****************************************************\n");
     printf("*****************************************************\n");
+
 /*
  * add S : to start scan
  * add W : to change the scanning width of the program

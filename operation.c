@@ -3,9 +3,9 @@
 
 void init_operation_status(operation_status* op){
     op->speed = CM;
-    op->curr_position.x = 0;
-    op->curr_position.y = 0;
-    op->curr_position.z = 44;
+    op->curr_position.x = MIN_X;
+    op->curr_position.y = MAX_Y;
+    op->curr_position.z = MAX_Z;
     op->spindle_status = false;
 }
 
@@ -24,10 +24,10 @@ float set_next_speed(float curr_speed){
     if (curr_speed == 10){
         return 0.1;
     }else if(curr_speed== 5){
-        return 10;
+        return 10.0;
     }else if(curr_speed== 1){
-        return 5;
+        return 5.0;
     }else{
-        return 1;
+        return 1.0;
     }
 }

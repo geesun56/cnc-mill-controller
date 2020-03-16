@@ -32,54 +32,61 @@ void trigger_GPIO_pin(volatile struct io_peripherals *io, int pinno, int trigger
 
         if(AC_DEBUG){ printf("Trigger Pin No. %d \n",pinno); }
 
-        if (pinno == OK){
+        if(range_check(op, pinno)){       
+
+            if (pinno == OK){
             io->gpio.GPFSEL0.field.FSEL6 = GPFSEL_OUTPUT;
-        }else if(pinno == EXIT){
-            io->gpio.GPFSEL2.field.FSEL1 = GPFSEL_OUTPUT;
-        }else if(pinno == XPLUS){
-            io->gpio.GPFSEL1.field.FSEL3 = GPFSEL_OUTPUT;
-        }else if(pinno == YMINUS){
-            io->gpio.GPFSEL1.field.FSEL6 = GPFSEL_OUTPUT;
-        }else if(pinno == YPLUS){
-            io->gpio.GPFSEL1.field.FSEL9 = GPFSEL_OUTPUT;
-        }else if(pinno == ZMINUS){
-            io->gpio.GPFSEL2.field.FSEL3 = GPFSEL_OUTPUT;
-        }else if(pinno == XMINUS){
-            io->gpio.GPFSEL2.field.FSEL4 = GPFSEL_OUTPUT;
+            }else if(pinno == EXIT){
+                io->gpio.GPFSEL2.field.FSEL1 = GPFSEL_OUTPUT;
+            }else if(pinno == XPLUS){
+                io->gpio.GPFSEL1.field.FSEL3 = GPFSEL_OUTPUT;
+            }else if(pinno == YMINUS){
+                io->gpio.GPFSEL1.field.FSEL6 = GPFSEL_OUTPUT;
+            }else if(pinno == YPLUS){
+                io->gpio.GPFSEL1.field.FSEL9 = GPFSEL_OUTPUT;
+            }else if(pinno == ZMINUS){
+                io->gpio.GPFSEL2.field.FSEL3 = GPFSEL_OUTPUT;
+            }else if(pinno == XMINUS){
+                io->gpio.GPFSEL2.field.FSEL4 = GPFSEL_OUTPUT;
+            }else{
+                io->gpio.GPFSEL2.field.FSEL2 = GPFSEL_OUTPUT;
+            }
+        
+            usleep(trigger_time);
+        
+            if (pinno == OK){
+                io->gpio.GPFSEL0.field.FSEL6 = GPFSEL_INPUT;
+                op->spindle_status = !(op->spindle_status);
+            }else if(pinno == EXIT){
+                io->gpio.GPFSEL2.field.FSEL1 = GPFSEL_INPUT;
+                op->speed = set_next_speed(op->speed);
+            }else if(pinno == XPLUS){
+                io->gpio.GPFSEL1.field.FSEL3 = GPFSEL_INPUT;
+                op->curr_position.x += 1*(op->speed);
+            }else if(pinno == YMINUS){
+                io->gpio.GPFSEL1.field.FSEL6 = GPFSEL_INPUT;
+                op->curr_position.y -= 1*(op->speed);
+            }else if(pinno == YPLUS){
+                io->gpio.GPFSEL1.field.FSEL9 = GPFSEL_INPUT;
+                op->curr_position.y += 1*(op->speed);
+            }else if(pinno == ZMINUS){
+                io->gpio.GPFSEL2.field.FSEL3 = GPFSEL_INPUT;
+                op->curr_position.z -= 1*(op->speed);
+            }else if(pinno == XMINUS){
+                io->gpio.GPFSEL2.field.FSEL4 = GPFSEL_INPUT;
+                op->curr_position.x -= 1*(op->speed);
+            }else{
+                io->gpio.GPFSEL2.field.FSEL2 = GPFSEL_INPUT;
+                op->curr_position.z += 1*(op->speed);
+            }
+            
+            usleep(rest_time); 
+
+            print_operation_status(op);
         }else{
-            io->gpio.GPFSEL2.field.FSEL2 = GPFSEL_OUTPUT;
+            printf("Invalid command\n");
         }
-        
-        usleep(trigger_time);
-        
-        if (pinno == OK){
-            io->gpio.GPFSEL0.field.FSEL6 = GPFSEL_INPUT;
-            op->spindle_status = !(op->spindle_status);
-        }else if(pinno == EXIT){
-            io->gpio.GPFSEL2.field.FSEL1 = GPFSEL_INPUT;
-            op->speed = set_next_speed(op->speed);
-        }else if(pinno == XPLUS){
-            io->gpio.GPFSEL1.field.FSEL3 = GPFSEL_INPUT;
-            op->curr_position.x += 1*(op->speed);
-        }else if(pinno == YMINUS){
-            io->gpio.GPFSEL1.field.FSEL6 = GPFSEL_INPUT;
-            op->curr_position.y -= 1*(op->speed);
-        }else if(pinno == YPLUS){
-            io->gpio.GPFSEL1.field.FSEL9 = GPFSEL_INPUT;
-            op->curr_position.y += 1*(op->speed);
-        }else if(pinno == ZMINUS){
-            io->gpio.GPFSEL2.field.FSEL3 = GPFSEL_INPUT;
-            op->curr_position.z -= 1*(op->speed);
-        }else if(pinno == XMINUS){
-            io->gpio.GPFSEL2.field.FSEL4 = GPFSEL_INPUT;
-            op->curr_position.x -= 1*(op->speed);
-        }else{
-            io->gpio.GPFSEL2.field.FSEL2 = GPFSEL_INPUT;
-            op->curr_position.z += 1*(op->speed);
-        }
-        
-        usleep(rest_time); 
-    
+  
 }
 
 void hold_GPIO_pin(volatile struct io_peripherals *io, int pinno){
@@ -138,4 +145,55 @@ int decode_pin(char ch){
     return target_pin;
         
             
+}
+
+int range_check(operation_status* op, int pinno){
+        
+        if(pinno == ZPLUS){
+            if(op->curr_position.z + (op->speed) <= MAX_Z )   return 1;
+            else    return 0;
+        }else if(pinno == ZMINUS){
+            if(op->curr_position.z - (op->speed) >= MIN_Z )   return 1;
+            else    return 0;
+        }else if(pinno == XPLUS){
+            if(op->curr_position.x + (op->speed) <= MAX_X )   return 1;
+            else    return 0;
+        }else if(pinno == XMINUS){
+            if(op->curr_position.x - (op->speed) >= MIN_X )   return 1;
+            else    return 0;
+        }else if(pinno == YPLUS){
+            if(op->curr_position.y + (op->speed) <= MAX_Y )   return 1;
+            else    return 0;
+        }else if(pinno == YMINUS){
+            if(op->curr_position.y - (op->speed) >= MIN_Y )   return 1;
+            else    return 0;
+        }else{
+            return 1;
+        }
+}
+
+void speed_change(operation_status * op, volatile struct io_peripherals *io, float request_speed){
+    float speed_table[4] = {0.1, 1.0, 5.0, 10.0};
+    int curr_idx;
+    int tar_idx;
+    int times;
+
+    for(int i = 0; i<4; i++){
+        if(speed_table[i] == op->speed) curr_idx = i;
+        if(speed_table[i] == request_speed) tar_idx = i;
+    }
+
+    if(op->speed < request_speed){
+        times = tar_idx - curr_idx;
+    }
+    else if(op->speed > request_speed){
+        times = 4 - curr_idx + tar_idx;
+    }else{
+        times = 0;
+    }
+
+    for(int i=0; i<times; i++){
+        trigger_GPIO_pin(io, EXIT, QUICK_PUSH, QUICK_REST, op);
+    }
+
 }
