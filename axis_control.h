@@ -18,3 +18,7 @@ int decode_pin(char ch);
 void hold_GPIO_pin(volatile struct io_peripherals *io, int pinno);
 int range_check(operation_status* op, int pinno);
 void speed_change(operation_status * op, volatile struct io_peripherals *io, float request_speed);
+
+void move_to_point(volatile struct io_peripherals *io, operation_status * op, coordinate* target_point);
+void _axis_move (volatile struct io_peripherals *io, operation_status * op, char axis, int dir, int distance);
+void exit_machine(volatile struct io_peripherals *io, operation_status * op);

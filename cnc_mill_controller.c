@@ -31,15 +31,15 @@ int main( void )
       while (!done){
         printf("Enter commands (m: manual control / s:execute program) \n");  
         char ch = get_pressed_key();
-         int pinno = decode_pin(ch);
-          if(ch == 'm'){
+        int pinno = decode_pin(ch);
+        trigger_GPIO_pin(io, OK, QUICK_PUSH ,QUICK_REST, &op);
+        
+        if(ch == 'm'){
               manual_control(io, &op);
               printf("Exit manual cotrol...\n");
             }else if(ch=='s'){
                 printf("Initiailize point\n");
 
-                trigger_GPIO_pin(io, OK, QUICK_PUSH ,QUICK_REST, &op);
-                
                 speed_change(&op, io, 5.0);
                 
                 trigger_GPIO_pin(io, XPLUS, QUICK_PUSH , QUICK_REST, &op);
@@ -56,9 +56,17 @@ int main( void )
                 
                 //print_operation_status(&op);
                 
+            }else if(ch=='p'){
+              coordinate tar;
+              tar.x = 10;
+              tar.y = 100;
+              tar.z = 30;
+              
+              move_to_point(io, &op, &tar);
             }else{
               done = true;
-              printf("Input error \n");
+              printf("Exit machine... \n");
+              exit_machine(io,&op);
             }
             
           }
@@ -74,11 +82,7 @@ int main( void )
   return 0;
 }
 
-void move_to_point(volatile struct io_peripherals *io, operation_status * op, coordinate* point){
-  
-  point->x;
-  point->y;
-  point->z;
-}
+
+
 
 

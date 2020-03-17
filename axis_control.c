@@ -197,3 +197,58 @@ void speed_change(operation_status * op, volatile struct io_peripherals *io, flo
     }
 
 }
+
+void move_to_point(volatile struct io_peripherals *io, operation_status * op, coordinate* target_point){
+  float* curr_point = &(op->curr_position);
+  float* tar_point = target_point;
+  char axis_array[3] = {'x', 'y', 'z'};
+
+  for(int i=0; i<3; i++){
+      int dist = *tar_point - *curr_point;
+      if(dist >= 0){
+          _axis_move(io, op, axis_array[i], 1, dist);
+      }else{
+          _axis_move(io, op, axis_array[i], 0, -dist);
+      }
+
+      tar_point++;
+      curr_point++;
+  }
+  
+}
+
+void _axis_move (volatile struct io_peripherals *io, operation_status * op, char axis, int dir, int distance)
+{
+  int _target_pin;
+
+  if(axis == 'x'){
+      if(dir) _target_pin = XPLUS;
+      else  _target_pin = XMINUS;
+  }else if(axis == 'y'){
+      if(dir) _target_pin = YPLUS;
+      else  _target_pin = YMINUS;
+  }else if(axis == 'z'){
+      if(dir) _target_pin = ZPLUS;
+      else  _target_pin = ZMINUS;
+  }else{
+    printf("Invalid axis move\n");
+    return;    
+  }
+
+  printf("axis: %c, pinno: %d , dist: %d\n", axis, _target_pin, distance);
+
+  speed_change(op, io, 1.0);
+  for(int i=0 ; i<distance ; i++){
+      trigger_GPIO_pin(io, _target_pin, QUICK_PUSH, QUICK_REST, op);
+  }
+
+}
+
+void exit_machine(volatile struct io_peripherals *io, operation_status * op){
+    coordinate _initial_point;
+    _initial_point.x = MIN_X;
+    _initial_point.y = MAX_Y;
+    _initial_point.z = MAX_Z;
+
+    move_to_point(io, op, &_initial_point);
+}
