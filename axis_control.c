@@ -205,10 +205,12 @@ void move_to_point(volatile struct io_peripherals *io, operation_status * op, co
 
   for(int i=0; i<3; i++){
       int dist = *tar_point - *curr_point;
-      if(dist >= 0){
+      if(dist > 0){
           _axis_move(io, op, axis_array[i], 1, dist);
-      }else{
+      }else if(dist < 0){
           _axis_move(io, op, axis_array[i], 0, -dist);
+      }else{
+
       }
 
       tar_point++;
@@ -251,4 +253,33 @@ void exit_machine(volatile struct io_peripherals *io, operation_status * op){
     _initial_point.z = MAX_Z;
 
     move_to_point(io, op, &_initial_point);
+}
+
+void square_range_scan(volatile struct io_peripherals *io, operation_status * op, float range, float scan_step){
+    speed_change(op, io, scan_step);
+
+    int steps = range/scan_step;
+    coordinate target_point;
+    target_point.x = op->curr_position.x;
+    target_point.y = op->curr_position.y;
+    target_point.z = op->curr_position.z;
+
+    float _origin_position_x = op->curr_position.x;
+    float _origin_position_y = op->curr_position.y;
+
+    for(int i=0; i<steps; i++){
+        float temp = target_point.x;
+        for(int i=0; i<steps; i++){
+            move_to_point(io, op, &target_point);
+            target_point.x++;
+        }
+        target_point.y++;
+        target_point.x = temp;
+        move_to_point(io,op, &target_point);
+    }
+    printf("Scanning completed!");
+    target_point.x = _origin_position_x;
+    target_point.y = _origin_position_y;
+
+    move_to_point(io,op, &target_point);
 }

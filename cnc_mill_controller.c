@@ -5,6 +5,9 @@
 * 
 ***************************************************/
 
+/*
+* Minimum distance range 0.1mm to 10mm
+*/
 
 #include "starter.h"
 #include "pin_config.h"
@@ -57,12 +60,13 @@ int main( void )
                 //print_operation_status(&op);
                 
             }else if(ch=='p'){
-              coordinate tar;
-              tar.x = 10;
-              tar.y = 100;
-              tar.z = 30;
+              coordinate mid_point;
+              mid_point.x = 50;
+              mid_point.y = 50;
+              mid_point.z = 0;
               
-              move_to_point(io, &op, &tar);
+              move_to_point(io, &op, &mid_point);
+              square_range_scan(io, &op, 10, 1);
             }else{
               done = true;
               printf("Exit machine... \n");
