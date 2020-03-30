@@ -82,7 +82,7 @@ void trigger_GPIO_pin(volatile struct io_peripherals *io, int pinno, int trigger
             
             usleep(rest_time); 
 
-            print_operation_status(op);
+            if(AC_DEBUG)    print_operation_status(op);
         }else{
             printf("Invalid command\n");
         }
@@ -199,8 +199,8 @@ void speed_change(operation_status * op, volatile struct io_peripherals *io, flo
 }
 
 void move_to_point(volatile struct io_peripherals *io, operation_status * op, coordinate* target_point){
-  float* curr_point = &(op->curr_position);
-  float* tar_point = target_point;
+  float* curr_point = (float*)&(op->curr_position);
+  float* tar_point = (float*)target_point;
   char axis_array[3] = {'x', 'y', 'z'};
 
   for(int i=0; i<3; i++){
@@ -240,6 +240,7 @@ void _axis_move (volatile struct io_peripherals *io, operation_status * op, char
   printf("axis: %c, pinno: %d , dist: %d\n", axis, _target_pin, distance);
 
   speed_change(op, io, 1.0);
+
   for(int i=0 ; i<distance ; i++){
       trigger_GPIO_pin(io, _target_pin, QUICK_PUSH, QUICK_REST, op);
   }
@@ -255,31 +256,65 @@ void exit_machine(volatile struct io_peripherals *io, operation_status * op){
     move_to_point(io, op, &_initial_point);
 }
 
-void square_range_scan(volatile struct io_peripherals *io, operation_status * op, float range, float scan_step){
-    speed_change(op, io, scan_step);
+void square_range_scan(volatile struct io_peripherals *io, operation_status * op){
+    
+    float scan_length;
+    float scan_step;
 
-    int steps = range/scan_step;
-    coordinate target_point;
-    target_point.x = op->curr_position.x;
-    target_point.y = op->curr_position.y;
-    target_point.z = op->curr_position.z;
+    printf("Type scan area length(mm): ");
+    scanf("%f", &scan_length);
+    printf("Type scan unit distance(0.1mm/1mm/5mm/10mm):");
+    scanf("%f", &scan_step);
 
-    float _origin_position_x = op->curr_position.x;
-    float _origin_position_y = op->curr_position.y;
+
+    int half_length = scan_length/2;
+    int steps = scan_length/scan_step;
+    printf("* Start square area scanning *");
+    printf("- scan area: %0.1f mm^2\n", scan_length);
+    printf("- scan step: %0.1f mm^2\n", scan_step);
+    printf("- scan points: %d X %d\n", steps, steps);
+
+    coordinate origin_point;
+    origin_point.x = op->curr_position.x;
+    origin_point.y = op->curr_position.y;
+    origin_point.z = op->curr_position.z;
+
+    coordinate start_point;
+    start_point.x = op->curr_position.x - half_length;
+    start_point.y = op->curr_position.y + half_length;
+    start_point.z = 0;
+
+    move_to_point(io,op, &start_point);
+    speed_change(op,io, scan_step);
 
     for(int i=0; i<steps; i++){
-        float temp = target_point.x;
+        
         for(int i=0; i<steps; i++){
-            move_to_point(io, op, &target_point);
-            target_point.x++;
+            trigger_GPIO_pin(io, XPLUS, QUICK_PUSH, QUICK_REST, op);
         }
-        target_point.y++;
-        target_point.x = temp;
-        move_to_point(io,op, &target_point);
+
+        start_point.y++;
+        move_to_point(io,op, &start_point);
     }
     printf("Scanning completed!");
-    target_point.x = _origin_position_x;
-    target_point.y = _origin_position_y;
 
-    move_to_point(io,op, &target_point);
+    move_to_point(io,op, &origin_point);
+}
+
+void move_to_start_point(volatile struct io_peripherals *io, operation_status * op){
+    coordinate start_point;
+    start_point.x = START_X;
+    start_point.y = START_Y;
+    start_point.z = START_Z;
+
+    speed_change(op, io, 10.0);
+
+    for(int i=0; i<14; i++){
+        trigger_GPIO_pin(io, XPLUS, QUICK_PUSH, LONG_REST, op);
+    }
+    for(int i=0; i<2; i++){
+        trigger_GPIO_pin(io, YMINUS, QUICK_PUSH, LONG_REST, op);
+    }
+
+    move_to_point(io,op, &start_point);
 }
