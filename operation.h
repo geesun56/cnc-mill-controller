@@ -12,7 +12,7 @@
 #define MIN_Z 0.0
 
 #define START_X 147.0
-#define START_Y 88.0
+#define START_Y 89.0
 #define START_Z 44.0
 
 #include <stdbool.h>

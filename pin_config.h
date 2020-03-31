@@ -14,8 +14,8 @@
 
 #define QUICK_PUSH 140000
 #define LONG_PUSH 1000000
-#define QUICK_REST 100000
-#define LONG_REST 1500000
+#define QUICK_REST 90000
+#define LONG_REST 700000
 
 
 #endif
