@@ -260,6 +260,8 @@ void exit_machine(volatile struct io_peripherals *io, operation_status * op){
     
     move_to_point(io, op,&_zaxis );
     move_to_point(io, op, &_initial_point);
+    
+    trigger_GPIO_pin(io, EXIT, LONG_PUSH, QUICK_REST, op);
 }
 
 void square_range_scan(volatile struct io_peripherals *io, operation_status * op){
@@ -308,19 +310,35 @@ void square_range_scan(volatile struct io_peripherals *io, operation_status * op
 }
 
 void move_to_start_point(volatile struct io_peripherals *io, operation_status * op){
-    coordinate start_point;
-    start_point.x = START_X;
-    start_point.y = START_Y;
-    start_point.z = START_Z;
+    coordinate scan_start_point;
+    scan_start_point.x = START_X;
+    scan_start_point.y = START_Y;
+    scan_start_point.z = START_Z;
+    
+    coordinate initial_start_point;
+    initial_start_point.x = MIN_X;
+    initial_start_point.y = MAX_Y;
+    initial_start_point.z = MAX_Z;
+    
+    int _state_check1 = position_compare(&initial_start_point, &(op->curr_position));
+    int _state_check2 = position_compare(&scan_start_point, &(op->curr_position));
+    
+    if(_state_check1){
+        speed_change(op, io, 10.0);
 
-    speed_change(op, io, 10.0);
-
-    for(int i=0; i<14; i++){
-        trigger_GPIO_pin(io, XPLUS, QUICK_PUSH, LONG_REST, op);
+        for(int i=0; i<14; i++){
+            trigger_GPIO_pin(io, XPLUS, QUICK_PUSH, LONG_REST, op);
+        }
+        for(int i=0; i<2; i++){
+            trigger_GPIO_pin(io, YMINUS, QUICK_PUSH, LONG_REST, op);
+        }
     }
-    for(int i=0; i<2; i++){
-        trigger_GPIO_pin(io, YMINUS, QUICK_PUSH, LONG_REST, op);
-    }
+    
+    if(!_state_check2)  move_to_point(io,op, &scan_start_point);
+    
+}
 
-    move_to_point(io,op, &start_point);
+bool position_compare(coordinate* p1, coordinate* p2){
+        if(p1->x == p2->x && p1->y == p2->y && p1->z == p2->z) return true;
+        else return false;
 }

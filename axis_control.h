@@ -25,3 +25,4 @@ void exit_machine(volatile struct io_peripherals *io, operation_status * op);
 void square_range_scan(volatile struct io_peripherals *io, operation_status * op);
 
 void move_to_start_point(volatile struct io_peripherals *io, operation_status * op);
+bool position_compare(coordinate* p1, coordinate* p2);
