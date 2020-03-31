@@ -252,7 +252,13 @@ void exit_machine(volatile struct io_peripherals *io, operation_status * op){
     _initial_point.x = MIN_X;
     _initial_point.y = MAX_Y;
     _initial_point.z = MAX_Z;
-
+    
+    coordinate _zaxis;
+    _zaxis.x = op->curr_position.x;
+    _zaxis.y = op->curr_position.y;
+    _zaxis.z = MAX_Z;
+    
+    move_to_point(io, op,&_zaxis );
     move_to_point(io, op, &_initial_point);
 }
 
@@ -293,7 +299,7 @@ void square_range_scan(volatile struct io_peripherals *io, operation_status * op
             trigger_GPIO_pin(io, XPLUS, QUICK_PUSH, QUICK_REST, op);
         }
 
-        start_point.y++;
+        start_point.y--;
         move_to_point(io,op, &start_point);
     }
     printf("Scanning completed!");

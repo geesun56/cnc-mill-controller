@@ -37,28 +37,26 @@ int main( void )
         int pinno = decode_pin(ch);
         trigger_GPIO_pin(io, OK, QUICK_PUSH ,QUICK_REST, &op);
         
-        if(ch == 'm'){
-              manual_control(io, &op);
-              printf("Exit manual cotrol...\n");
-        }else if(ch=='s'){
-                printf("Initiailize point\n");
-                move_to_start_point(io, &op);
+            if(ch == 'm'){
+                  manual_control(io, &op);
+                  printf("Exit manual cotrol...\n");
+            }else if(ch=='s'){
+                    printf("Initiailize point\n");
+                    move_to_start_point(io, &op);
+                    
+                    square_range_scan(io, &op);
+                    
+                    done= true;
+                    
+                    //print_operation_status(&op);
+                    
                 
-                square_range_scan(io, &op);
-                
-                
-                
-                //print_operation_status(&op);
-                
+            }else   done = true;
             
-        }else{
-              done = true;
-              printf("Exit machine... \n");
+        }
+        
+        printf("Exit machine... \n");
               exit_machine(io,&op);
-            }
-            
-          }
-
           
             
         }
