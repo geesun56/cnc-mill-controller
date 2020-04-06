@@ -249,9 +249,9 @@ void _axis_move (volatile struct io_peripherals *io, operation_status * op, char
 
 void exit_machine(volatile struct io_peripherals *io, operation_status * op){
     coordinate _initial_point;
-    _initial_point.x = MIN_X;
-    _initial_point.y = 0;
-    _initial_point.z = MAX_Z;
+    _initial_point.x = INIT_X;
+    _initial_point.y = INIT_Y;
+    _initial_point.z = INIT_Z;
     
     coordinate _zaxis;
     _zaxis.x = op->curr_position.x;
@@ -329,16 +329,24 @@ void move_to_start_point(volatile struct io_peripherals *io, operation_status * 
         for(int i=0; i<14; i++){
             trigger_GPIO_pin(io, XPLUS, QUICK_PUSH, LONG_REST, op);
         }
+        for(int i=0; i<5; i++){
+            trigger_GPIO_pin(io, YMINUS, QUICK_PUSH, LONG_REST, op);
+        }
         
-        trigger_GPIO_pin(io, YPLUS, QUICK_PUSH, LONG_REST, op);
         
     }
     
     if(!_state_check2)  move_to_point(io,op, &scan_start_point);
+    
+        
     
 }
 
 bool position_compare(coordinate* p1, coordinate* p2){
         if(p1->x == p2->x && p1->y == p2->y && p1->z == p2->z) return true;
         else return false;
+}
+
+void reset_controller(volatile struct io_peripherals *io, operation_status * op){
+    trigger_GPIO_pin(io, EXIT, LONG_PUSH, QUICK_REST, op);
 }

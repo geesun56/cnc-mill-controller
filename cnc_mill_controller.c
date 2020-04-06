@@ -21,7 +21,7 @@ int main( void )
     operation_status op;
     bool done = false;
     
-    init_operation_status(&op);
+    
 
     io = import_registers();
     
@@ -29,7 +29,10 @@ int main( void )
   {
     
     //printf( "mem at 0x%8.8X\n", (unsigned int)io ); /* print where the I/O memory was actually mapped to */
+    
     init_GPIO_pins(io); // Set initial state
+    reset_controller(io, &op);
+    init_operation_status(&op);
     
       while (!done){
             printf("Enter commands (m: manual control / s:scan program / q:quit program) \n");  
