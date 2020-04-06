@@ -6,14 +6,18 @@
  
 #define MAX_X 298.0
 #define MIN_X 0.0
-#define MAX_Y 110.0
-#define MIN_Y 0.0
+#define MAX_Y 70.0
+#define MIN_Y -40.0
 #define MAX_Z 44.0
 #define MIN_Z 0.0
 
-#define START_X 147.0
-#define START_Y 88.0
-#define START_Z 44.0
+#define INIT_X 0.0
+#define INIT_Y 0.0
+#define INIT_Z 44.0
+
+#define START_X 146.0
+#define START_Y 22.0
+#define START_Z 0.0
 
 #include <stdbool.h>
 #include <stdio.h>

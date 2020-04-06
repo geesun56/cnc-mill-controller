@@ -20,7 +20,7 @@ void manual_control(volatile struct io_peripherals *io, operation_status* op){
  * add W : to change the scanning width of the program
  * add 
  * */
-
+    
     while(!done){
         char ch = get_pressed_key();
         int pinno = decode_pin(ch);
@@ -34,6 +34,7 @@ void manual_control(volatile struct io_peripherals *io, operation_status* op){
         }
 
     }
+     //trigger_GPIO_pin(io, EXIT, LONG_PUSH, QUICK_REST, op);
 
     
 }

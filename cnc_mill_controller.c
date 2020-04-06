@@ -36,7 +36,7 @@ int main( void )
             char ch = get_pressed_key();
             int pinno = decode_pin(ch);
             trigger_GPIO_pin(io, OK, QUICK_PUSH ,QUICK_REST, &op);
-            printf("ch checkk %c\n", ch);
+            printf("ch check %c\n", ch);
             
                 if(ch == 'm'){
                       manual_control(io, &op);

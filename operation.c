@@ -4,7 +4,7 @@
 void init_operation_status(operation_status* op){
     op->speed = CM;
     op->curr_position.x = MIN_X;
-    op->curr_position.y = MAX_Y;
+    op->curr_position.y = 0;
     op->curr_position.z = MAX_Z;
     op->spindle_status = false;
 }
