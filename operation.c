@@ -9,6 +9,15 @@ void init_operation_status(operation_status* op){
     op->spindle_status = false;
 }
 
+void change_operation_status(operation_status* op, float _x, float _y, float _z){
+    op->speed = CM;
+    op->curr_position.x = _x;
+    op->curr_position.y = _y;
+    op->curr_position.z = _z;
+    op->spindle_status = false;
+}
+
+
 void print_operation_status(operation_status* op){
 
     printf("<Operation status>\n");

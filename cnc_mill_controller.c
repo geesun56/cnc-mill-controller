@@ -35,7 +35,7 @@ int main( void )
     init_operation_status(&op);
     
       while (!done){
-            printf("Enter commands (m: manual control / s:scan program / q:quit program) \n");  
+            printf("Enter commands (m: manual control / s:scan program / q:quit program / i:set initial state) \n");  
             char ch = get_pressed_key();
             int pinno = decode_pin(ch);
             trigger_GPIO_pin(io, OK, QUICK_PUSH ,QUICK_REST, &op);
@@ -43,6 +43,15 @@ int main( void )
             
                 if(ch == 'm'){
                       manual_control(io, &op);
+                }      
+                if(ch == 'i'){
+                      float x_axis;
+                      float y_axis;
+                      float z_axis;
+                      printf("Type location data : ");
+                      scanf("%f %f %f", &x_axis, &y_axis, &z_axis);
+                      change_operation_status(&op, x_axis, y_axis, z_axis);
+                      print_operation_status(&op);
                       
                       
                 }else if(ch=='s'){
@@ -51,7 +60,7 @@ int main( void )
                         
                         bool scan_done = false;
                         
-                        printf("Start scanning(y/n)? ");
+                        printf("Start scanning(y/n)? \n");
                         char st= get_pressed_key();
                             
                         if(st == 'y')     square_range_scan(io, &op);

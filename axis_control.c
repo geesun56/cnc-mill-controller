@@ -277,7 +277,7 @@ void square_range_scan(volatile struct io_peripherals *io, operation_status * op
 
     int half_length = scan_length/2;
     int steps = scan_length/scan_step;
-    printf("* Start square area scanning *");
+    printf("\n* Start square area scanning *\n");
     printf("- scan area: %0.1f mm^2\n", scan_length);
     printf("- scan step: %0.1f mm^2\n", scan_step);
     printf("- scan points: %d X %d\n", steps, steps);
@@ -294,15 +294,17 @@ void square_range_scan(volatile struct io_peripherals *io, operation_status * op
 
     move_to_point(io,op, &start_point);
     speed_change(op,io, scan_step);
-
+    printf("START SCANNING\n");
     for(int i=0; i<steps; i++){
-        
+        sleep(SCAN_DELAY);
         for(int i=0; i<steps; i++){
             trigger_GPIO_pin(io, XPLUS, QUICK_PUSH, QUICK_REST, op);
+            sleep(SCAN_DELAY);
         }
 
         start_point.y--;
         move_to_point(io,op, &start_point);
+        
     }
     printf("Scanning completed!");
 

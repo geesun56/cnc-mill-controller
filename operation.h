@@ -16,9 +16,10 @@
 #define INIT_Z 44.0
 
 #define START_X 146.0
-#define START_Y 44.0
+#define START_Y 43.0
 #define START_Z 0.0
 
+#define SCAN_DELAY 3    //in seconds
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,6 +40,7 @@ typedef struct _operating_status{
 void init_operation_status(operation_status* op);
 void print_operation_status(operation_status* op);
 float set_next_speed(float curr_speed);
+void change_operation_status(operation_status* op, float _x, float _y, float _z);
 
 #endif
 
