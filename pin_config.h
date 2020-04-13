@@ -10,6 +10,7 @@
 #define XMINUS 24
 #define OK 6    //ok or spindle
 #define	EXIT 21 //exit or step
+#define TRIGGER 18
 
 
 #define QUICK_PUSH 140000

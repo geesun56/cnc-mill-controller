@@ -14,6 +14,9 @@ void init_GPIO_pins(volatile struct io_peripherals *io){
     GPIO_CLR( &(io->gpio), OK );
     GPIO_CLR( &(io->gpio), EXIT );
     
+    io->gpio.GPFSEL1.field.FSEL8 = GPFSEL_OUTPUT;    //set GPIO18 as trigger pin
+    GPIO_CLR( &(io->gpio), TRIGGER );
+    
     io->gpio.GPFSEL0.field.FSEL6 = GPFSEL_INPUT;    //set GPIO06 as OK
     io->gpio.GPFSEL2.field.FSEL1 = GPFSEL_INPUT;    //set GPIO12 as EXIT
     io->gpio.GPFSEL1.field.FSEL3 = GPFSEL_INPUT;    //set GPIO13 as XPLUS

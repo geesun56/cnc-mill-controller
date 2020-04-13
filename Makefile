@@ -6,6 +6,7 @@ SOURCES=./starter_codes/import_registers.c \
 		./manual_control.c \
 		./axis_control.c\
 		./operation.c\
+		./trigger.c\
 		cnc_mill_controller.c
 
 OBJECTS=$(patsubst %.c,%.o,$(SOURCES))

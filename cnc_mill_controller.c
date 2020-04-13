@@ -14,6 +14,7 @@
 #include "axis_control.h"
 #include "manual_control.h"
 #include "operation.h"
+#include "trigger.h"
 
 int main( void )
 {
@@ -39,7 +40,7 @@ int main( void )
             char ch = get_pressed_key();
             int pinno = decode_pin(ch);
             trigger_GPIO_pin(io, OK, QUICK_PUSH ,QUICK_REST, &op);
-            printf("ch check %c\n", ch);
+        
             
                 if(ch == 'm'){
                       manual_control(io, &op);
@@ -66,14 +67,7 @@ int main( void )
                         if(st == 'y')     square_range_scan(io, &op);
                         
                 }else if(ch=='t'){
-                        /*coordinate test;
-                        test.x = 1;
-                        test.y = 100;
-                        test.z = 40;
-                        
-                        int test_result = position_compare(&(op.curr_position),&test);
-                        
-                        printf("TEST result %d\n", test_result);*/
+                        trigger_generate(io, TRIG_TIME, INTVAL_TIME);
                 
                 }else   done = true;
             
