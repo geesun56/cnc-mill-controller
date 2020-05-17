@@ -19,7 +19,7 @@
 #define START_Y 43.0
 #define START_Z 0.0
 
-#define SCAN_DELAY 3    //in seconds
+#define SCAN_DELAY 5    //in seconds
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>

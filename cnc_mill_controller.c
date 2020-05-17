@@ -66,10 +66,10 @@ int main( void )
                             
                         if(st == 'y')     square_range_scan(io, &op);
                         
-                }else if(ch=='t'){
-                        trigger_generate(io, TRIG_TIME, INTVAL_TIME);
+                }else if(ch=='z'){
+                        done = true;
                 
-                }else   done = true;
+                }else  {} 
             
         }
         
